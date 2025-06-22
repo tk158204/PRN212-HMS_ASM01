@@ -1,0 +1,208 @@
+<UserControl x:Class="TranTuanKietWPF.Views.BookingManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewmodels="clr-namespace:TranTuanKietWPF.ViewModels"
+             xmlns:converters="clr-namespace:TranTuanKietWPF.Converters">
+    
+    <UserControl.DataContext>
+        <viewmodels:BookingViewModel />
+    </UserControl.DataContext>
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" 
+                Style="{StaticResource CardStyle}"
+                Margin="0,0,0,20">
+            <StackPanel Margin="20">
+                <Label Content="Booking Management" 
+                     Style="{StaticResource HeadingLabel}"
+                     HorizontalAlignment="Center"
+                     Margin="0,0,0,10"/>
+                <Label Content="Manage hotel bookings, reservations, and customer stays" 
+                     Style="{StaticResource ModernLabel}"
+                     Foreground="{StaticResource DarkGrayColor}"
+                     HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Search and Actions -->
+        <Border Grid.Row="1" 
+                Style="{StaticResource CardStyle}"
+                Margin="0,0,0,20">
+            <Grid Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Search -->
+                <StackPanel Grid.Column="0" 
+                          Orientation="Horizontal" 
+                          VerticalAlignment="Center">
+                    <TextBox x:Name="txtSearch" 
+                           Style="{StaticResource ModernTextBox}"
+                           Width="300"
+                           Margin="0,0,10,0"
+                           Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                           VerticalAlignment="Center"/>
+                    <Button Content="Search" 
+                          Style="{StaticResource ModernButton}"
+                          Command="{Binding SearchCommand}"
+                          VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Actions -->
+                <StackPanel Grid.Column="1" 
+                          Orientation="Horizontal" 
+                          VerticalAlignment="Center"
+                          Margin="20,0,0,0">
+                    <Button Content="Add Booking" 
+                          Style="{StaticResource SuccessButton}"
+                          Command="{Binding AddBookingCommand}"
+                          Margin="0,0,10,0"/>
+                    <Button Content="Refresh" 
+                          Style="{StaticResource SecondaryButton}"
+                          Command="{Binding RefreshCommand}"/>
+                </StackPanel>
+
+                <!-- Status -->
+                <StackPanel Grid.Column="2" 
+                          Orientation="Horizontal" 
+                          VerticalAlignment="Center"
+                          Margin="20,0,0,0">
+                    <Ellipse Style="{StaticResource StatusIndicator}" 
+                           Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding StatusMessage}" 
+                             FontFamily="{StaticResource PrimaryFont}"
+                             FontSize="12"
+                             Foreground="{StaticResource DarkGrayColor}"
+                             VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Booking List -->
+        <Border Grid.Row="2" 
+                Style="{StaticResource CardStyle}">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Table Header -->
+                <Border Grid.Row="0" 
+                      Background="{StaticResource PrimaryColor}"
+                      CornerRadius="4,4,0,0"
+                      Padding="15,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="ID" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Grid.Column="1" Text="Customer" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Grid.Column="2" Text="Check-in" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Grid.Column="3" Text="Check-out" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Grid.Column="4" Text="Duration" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Grid.Column="5" Text="Total Price" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Grid.Column="6" Text="Status" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Grid.Column="7" Text="Actions" FontWeight="Bold" Foreground="White"/>
+                    </Grid>
+                </Border>
+
+                <!-- Booking DataGrid -->
+                <DataGrid Grid.Row="1" 
+                        ItemsSource="{Binding Bookings}"
+                        Style="{StaticResource ModernDataGrid}"
+                        AutoGenerateColumns="False"
+                        IsReadOnly="True"
+                        SelectionMode="Single"
+                        SelectionUnit="FullRow"
+                        SelectedItem="{Binding SelectedBooking}">
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource ModernDataGridColumnHeader}"/>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding BookingReservationID}" Width="60"/>
+                        <DataGridTextColumn Header="Customer" Binding="{Binding Customer.CustomerFullName}" Width="120"/>
+                        <DataGridTextColumn Header="Check-in" Binding="{Binding StartDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="100"/>
+                        <DataGridTextColumn Header="Check-out" Binding="{Binding EndDate, StringFormat=\{0:dd/MM/yyyy\}}" Width="100"/>
+                        <DataGridTextColumn Header="Duration" Binding="{Binding BookingDuration}" Width="80"/>
+                        <DataGridTextColumn Header="Total Price" Binding="{Binding TotalPrice, StringFormat=\{0:C\}}" Width="100"/>
+                        <DataGridTemplateColumn Header="Status" Width="80">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Background="{Binding BookingStatus, Converter={StaticResource StatusToIndexConverter}}" 
+                                          CornerRadius="3" 
+                                          Margin="10,0,0,0" 
+                                          Padding="8,3">
+                                        <TextBlock Text="{Binding BookingStatus, Converter={StaticResource BookingStatusConverter}}" 
+                                                 FontSize="11" 
+                                                 FontWeight="SemiBold" 
+                                                 Foreground="White"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Actions" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="Edit" 
+                                              Style="{StaticResource ModernButton}"
+                                              Background="{StaticResource InfoColor}"
+                                              Padding="8,4"
+                                              Margin="0,0,5,0"
+                                              Command="{Binding DataContext.EditBookingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              CommandParameter="{Binding}"/>
+                                        <Button Content="Delete" 
+                                              Style="{StaticResource ModernButton}"
+                                              Background="{StaticResource AccentColor}"
+                                              Padding="8,4"
+                                              Command="{Binding DataContext.DeleteBookingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Pagination -->
+                <StackPanel Grid.Row="2" 
+                          Orientation="Horizontal" 
+                          HorizontalAlignment="Center" 
+                          Margin="0,20,0,0">
+                    <Button Content="Previous" 
+                          Style="{StaticResource ModernButton}"
+                          Command="{Binding PreviousPageCommand}"
+                          Margin="0,0,10,0"/>
+                    <TextBlock Text="{Binding CurrentPage}" 
+                             VerticalAlignment="Center" 
+                             Margin="10,0"
+                             FontWeight="Bold"/>
+                    <Button Content="Next" 
+                          Style="{StaticResource ModernButton}"
+                          Command="{Binding NextPageCommand}"
+                          Margin="10,0,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl> 

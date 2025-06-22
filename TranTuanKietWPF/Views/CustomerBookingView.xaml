@@ -1,0 +1,199 @@
+<UserControl x:Class="TranTuanKietWPF.Views.CustomerBookingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewmodels="clr-namespace:TranTuanKietWPF.ViewModels"
+             xmlns:converters="clr-namespace:TranTuanKietWPF.Converters">
+    
+    <UserControl.DataContext>
+        <viewmodels:CustomerBookingViewModel />
+    </UserControl.DataContext>
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" 
+                Style="{StaticResource CardStyle}"
+                Margin="0,0,0,20">
+            <StackPanel Margin="20">
+                <Label Content="Book a Room" 
+                     Style="{StaticResource HeadingLabel}"
+                     HorizontalAlignment="Center"
+                     Margin="0,0,0,10"/>
+                <Label Content="Search for available rooms and make your reservation" 
+                     Style="{StaticResource ModernLabel}"
+                     Foreground="{StaticResource DarkGrayColor}"
+                     HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Search Form -->
+        <Border Grid.Row="1" 
+                Style="{StaticResource CardStyle}"
+                Margin="0,0,0,20">
+            <Grid Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Check-in Date -->
+                <StackPanel Grid.Column="0" 
+                          Margin="0,0,20,0">
+                    <Label Content="Check-in Date:" 
+                         Style="{StaticResource ModernLabel}"
+                         FontWeight="SemiBold"
+                         Margin="0,0,0,5"/>
+                    <DatePicker SelectedDate="{Binding CheckInDate}" 
+                              Margin="0,0,0,10"/>
+                </StackPanel>
+
+                <!-- Check-out Date -->
+                <StackPanel Grid.Column="1" 
+                          Margin="0,0,20,0">
+                    <Label Content="Check-out Date:" 
+                         Style="{StaticResource ModernLabel}"
+                         FontWeight="SemiBold"
+                         Margin="0,0,0,5"/>
+                    <DatePicker SelectedDate="{Binding CheckOutDate}" 
+                              Margin="0,0,0,10"/>
+                </StackPanel>
+
+                <!-- Search Button -->
+                <Button Grid.Column="2" 
+                      Content="Search Rooms" 
+                      Style="{StaticResource ModernButton}"
+                      Command="{Binding SearchRoomsCommand}"
+                      VerticalAlignment="Bottom"
+                      Margin="0,0,0,10"/>
+            </Grid>
+        </Border>
+
+        <!-- Available Rooms -->
+        <Border Grid.Row="2" 
+                Style="{StaticResource CardStyle}"
+                Visibility="{Binding HasSearched, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Results Header -->
+                <Border Grid.Row="0" 
+                      Background="{StaticResource SuccessColor}"
+                      CornerRadius="4,4,0,0"
+                      Padding="15,10"
+                      Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" 
+                                 Text="Available Rooms" 
+                                 FontWeight="Bold" 
+                                 Foreground="White"
+                                 FontSize="16"/>
+                        <TextBlock Grid.Column="1" 
+                                 Text="{Binding AvailableRooms.Count, StringFormat='{}{0} rooms found'}" 
+                                 FontWeight="Bold" 
+                                 Foreground="White"/>
+                    </Grid>
+                </Border>
+
+                <!-- Room List -->
+                <ScrollViewer Grid.Row="1" 
+                            VerticalScrollBarVisibility="Auto"
+                            MaxHeight="400">
+                    <ItemsControl ItemsSource="{Binding AvailableRooms}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource WhiteColor}"
+                                      BorderBrush="#E0E0E0"
+                                      BorderThickness="0,0,0,1"
+                                      Padding="20,15"
+                                      Margin="0,0,0,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Room Info -->
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="{Binding RoomNumber}" 
+                                                     FontSize="18" 
+                                                     FontWeight="Bold" 
+                                                     Foreground="{StaticResource PrimaryColor}"
+                                                     Margin="0,0,0,5"/>
+                                            <TextBlock Text="{Binding RoomType.RoomTypeName}" 
+                                                     FontSize="14" 
+                                                     Foreground="{StaticResource DarkGrayColor}"
+                                                     Margin="0,0,0,5"/>
+                                            <TextBlock Text="{Binding RoomDescription}" 
+                                                     FontSize="12" 
+                                                     Foreground="{StaticResource DarkGrayColor}"
+                                                     TextWrapping="Wrap"/>
+                                        </StackPanel>
+
+                                        <!-- Price -->
+                                        <StackPanel Grid.Column="1" 
+                                                  VerticalAlignment="Center"
+                                                  Margin="20,0">
+                                            <TextBlock Text="{Binding RoomType.RoomTypePrice, StringFormat='{}{0:C}'}" 
+                                                     FontSize="20" 
+                                                     FontWeight="Bold" 
+                                                     Foreground="{StaticResource SuccessColor}"
+                                                     HorizontalAlignment="Center"/>
+                                            <TextBlock Text="per night" 
+                                                     FontSize="12" 
+                                                     Foreground="{StaticResource DarkGrayColor}"
+                                                     HorizontalAlignment="Center"/>
+                                        </StackPanel>
+
+                                        <!-- Book Button -->
+                                        <Button Grid.Column="2" 
+                                              Content="Book Now" 
+                                              Style="{StaticResource SuccessButton}"
+                                              Command="{Binding DataContext.BookRoomCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              CommandParameter="{Binding}"
+                                              VerticalAlignment="Center"
+                                              Padding="20,10"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!-- No Results Message -->
+        <Border Grid.Row="2" 
+                Style="{StaticResource CardStyle}"
+                Visibility="{Binding NoResults, Converter={StaticResource BoolToVisibilityConverter}}">
+            <StackPanel Margin="20" 
+                      HorizontalAlignment="Center" 
+                      VerticalAlignment="Center">
+                <TextBlock Text="No rooms available for the selected dates" 
+                         FontSize="16" 
+                         Foreground="{StaticResource DarkGrayColor}"
+                         HorizontalAlignment="Center"
+                         Margin="0,0,0,10"/>
+                <TextBlock Text="Please try different dates or contact the hotel for assistance" 
+                         FontSize="14" 
+                         Foreground="{StaticResource DarkGrayColor}"
+                         HorizontalAlignment="Center"
+                         TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl> 
