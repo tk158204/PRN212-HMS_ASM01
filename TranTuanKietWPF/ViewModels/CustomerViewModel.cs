@@ -120,7 +120,6 @@ namespace TranTuanKietWPF.ViewModels
 
                 // Show dialog
                 var dialog = new CustomerDialog(newCustomer, false);
-                dialog.Owner = Application.Current.MainWindow;
                 
                 if (dialog.ShowDialog() == true)
                 {
@@ -128,7 +127,7 @@ namespace TranTuanKietWPF.ViewModels
                     var customer = dialog.ViewModel.Customer;
                     
                     // Add to database
-                    _customerService.AddCustomer(customer);
+                    _customerService?.AddCustomer(customer);
                     
                     // Refresh list
                     LoadCustomers();
@@ -162,7 +161,6 @@ namespace TranTuanKietWPF.ViewModels
 
                 // Show dialog
                 var dialog = new CustomerDialog(customerToEdit, true);
-                dialog.Owner = Application.Current.MainWindow;
                 
                 if (dialog.ShowDialog() == true)
                 {
@@ -170,7 +168,7 @@ namespace TranTuanKietWPF.ViewModels
                     var customer = dialog.ViewModel.Customer;
                     
                     // Update in database
-                    _customerService.UpdateCustomer(customer);
+                    _customerService?.UpdateCustomer(customer);
                     
                     // Refresh list
                     LoadCustomers();

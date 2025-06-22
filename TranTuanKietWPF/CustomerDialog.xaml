@@ -10,12 +10,53 @@
             <Setter Property="Margin" Value="0,5,0,10"/>
             <Setter Property="Padding" Value="5,3"/>
             <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#ddd"/>
+        </Style>
+        
+        <Style x:Key="PasswordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="Margin" Value="0,5,0,10"/>
+            <Setter Property="Padding" Value="5,3"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#ddd"/>
         </Style>
         
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Margin" Value="5,0"/>
             <Setter Property="Padding" Value="15,5"/>
             <Setter Property="MinWidth" Value="80"/>
+            <Setter Property="Background" Value="#3498db"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="3"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2980b9"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style x:Key="CancelButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+            <Setter Property="Background" Value="#95a5a6"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#7f8c8d"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
     
@@ -44,15 +85,15 @@
             <DatePicker SelectedDate="{Binding Customer.CustomerBirthday}" Margin="0,5,0,10" Height="30"/>
             
             <TextBlock Text="Password:" Margin="0,5,0,0"/>
-            <PasswordBox x:Name="txtPassword" Margin="0,5,0,10" Height="30" Padding="5,3"/>
+            <PasswordBox x:Name="txtPassword" Style="{StaticResource PasswordBoxStyle}"/>
             
             <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" TextWrapping="Wrap" Margin="0,10"/>
         </StackPanel>
         
         <!-- Buttons -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-            <Button Content="Save" Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=txtPassword}" Style="{StaticResource ButtonStyle}"/>
-            <Button Content="Cancel" Command="{Binding CancelCommand}" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Save" Click="SaveButton_Click" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}" Style="{StaticResource CancelButtonStyle}"/>
         </StackPanel>
     </Grid>
 </Window> 

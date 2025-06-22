@@ -13,6 +13,7 @@ namespace TranTuanKietWPF.ViewModels
         private Customer _customer;
         private bool _isEditMode;
         private string _errorMessage = string.Empty;
+        private string _dialogTitle = string.Empty;
 
         public Customer Customer
         {
@@ -32,6 +33,12 @@ namespace TranTuanKietWPF.ViewModels
             set => SetProperty(ref _errorMessage, value);
         }
 
+        public string DialogTitle
+        {
+            get => _dialogTitle;
+            set => SetProperty(ref _dialogTitle, value);
+        }
+
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
 
@@ -39,6 +46,7 @@ namespace TranTuanKietWPF.ViewModels
         {
             _customer = customer;
             _isEditMode = isEditMode;
+            _dialogTitle = isEditMode ? "Edit Customer" : "Add New Customer";
 
             SaveCommand = new RelayCommand(_ => ExecuteSave());
             CancelCommand = new RelayCommand(_ => ExecuteCancel());
@@ -63,10 +71,15 @@ namespace TranTuanKietWPF.ViewModels
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(Customer.Password))
+                // Get password from PasswordBox if not in edit mode or if password is being changed
+                if (!IsEditMode || string.IsNullOrWhiteSpace(Customer.Password))
                 {
-                    ErrorMessage = "Password is required.";
-                    return;
+                    // Password will be set from the dialog's code-behind
+                    if (string.IsNullOrWhiteSpace(Customer.Password))
+                    {
+                        ErrorMessage = "Password is required.";
+                        return;
+                    }
                 }
 
                 if (Customer.Password.Length < 6)
@@ -79,6 +92,13 @@ namespace TranTuanKietWPF.ViewModels
                 if (!IsValidEmail(Customer.EmailAddress))
                 {
                     ErrorMessage = "Invalid email format.";
+                    return;
+                }
+
+                // Validate phone number if provided
+                if (!string.IsNullOrWhiteSpace(Customer.Telephone) && !IsValidPhoneNumber(Customer.Telephone))
+                {
+                    ErrorMessage = "Invalid phone number format.";
                     return;
                 }
 
@@ -127,6 +147,17 @@ namespace TranTuanKietWPF.ViewModels
             {
                 return false;
             }
+        }
+
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            // Basic phone number validation - can be enhanced based on requirements
+            return System.Text.RegularExpressions.Regex.IsMatch(phoneNumber, @"^[\d\s\-\+\(\)]+$");
+        }
+
+        public void SetPassword(string password)
+        {
+            Customer.Password = password;
         }
     }
 }

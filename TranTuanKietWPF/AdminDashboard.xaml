@@ -1,8 +1,8 @@
-<Window x:Class="NguyenHuanWPF.AdminDashboard"
+<Window x:Class="TranTuanKietWPF.AdminDashboard"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:viewmodels="clr-namespace:NguyenHuanWPF.ViewModels"
-        xmlns:views="clr-namespace:NguyenHuanWPF.Views"
+        xmlns:viewmodels="clr-namespace:TranTuanKietWPF.ViewModels"
+        xmlns:views="clr-namespace:TranTuanKietWPF.Views"
         Title="Admin Dashboard - FU Mini Hotel System" Height="700" Width="1200"
         WindowStartupLocation="CenterScreen">
     

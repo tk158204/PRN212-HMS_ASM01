@@ -1,25 +1,17 @@
 using BusinessObjects;
-using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace NguyenHuanWPF
+namespace TranTuanKietWPF
 {
     public partial class RoomDialog : Window
     {
         public ViewModels.RoomDialogViewModel ViewModel { get; private set; }
 
-        public RoomDialog(RoomInformation room, ObservableCollection<RoomType> roomTypes, bool isEditing)
+        public RoomDialog(RoomInformation room, bool isEditing)
         {
             InitializeComponent();
-            ViewModel = new ViewModels.RoomDialogViewModel(room, roomTypes, isEditing);
+            ViewModel = new ViewModels.RoomDialogViewModel(room, isEditing);
             DataContext = ViewModel;
-            
-            // Handle dialog result
-            ViewModel.RequestClose += (sender, result) =>
-            {
-                DialogResult = result;
-                Close();
-            };
         }
     }
 } 

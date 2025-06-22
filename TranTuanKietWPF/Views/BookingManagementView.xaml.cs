@@ -7,6 +7,7 @@ namespace TranTuanKietWPF.Views
         public BookingManagementView()
         {
             InitializeComponent();
+            DataContext = new ViewModels.BookingViewModel();
         }
     }
 } 

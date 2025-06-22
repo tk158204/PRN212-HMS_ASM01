@@ -190,7 +190,6 @@ namespace TranTuanKietWPF.ViewModels
 
                 // Show dialog
                 var dialog = new RoomDialog(newRoom, false);
-                dialog.Owner = Application.Current.MainWindow;
                 
                 if (dialog.ShowDialog() == true)
                 {
@@ -232,7 +231,6 @@ namespace TranTuanKietWPF.ViewModels
 
                 // Show dialog
                 var dialog = new RoomDialog(roomToEdit, true);
-                dialog.Owner = Application.Current.MainWindow;
                 
                 if (dialog.ShowDialog() == true)
                 {

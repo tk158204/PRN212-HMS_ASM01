@@ -2,7 +2,7 @@ using BusinessObjects;
 using System.IO;
 using System.Windows;
 
-namespace NguyenHuanWPF
+namespace TranTuanKietWPF
 {
     public partial class App : Application
     {

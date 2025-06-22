@@ -3,12 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewmodels="clr-namespace:TranTuanKietWPF.ViewModels">
     
-    <UserControl.DataContext>
-        <viewmodels:ReportViewModel />
-    </UserControl.DataContext>
-    
     <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -23,7 +20,7 @@
                      Style="{StaticResource HeadingLabel}"
                      HorizontalAlignment="Center"
                      Margin="0,0,0,10"/>
-                <Label Content="View hotel performance metrics and generate reports" 
+                <Label Content="View hotel performance metrics and generate comprehensive reports" 
                      Style="{StaticResource ModernLabel}"
                      Foreground="{StaticResource DarkGrayColor}"
                      HorizontalAlignment="Center"/>
@@ -38,11 +35,28 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Date Range -->
+                <!-- Report Type -->
                 <StackPanel Grid.Column="0" 
+                          Margin="0,0,20,0">
+                    <Label Content="Report Type:" 
+                         Style="{StaticResource ModernLabel}"
+                         FontWeight="SemiBold"
+                         Margin="0,0,0,5"/>
+                    <ComboBox SelectedValue="{Binding SelectedReportType}" 
+                             Margin="0,0,0,10">
+                        <ComboBoxItem Content="Revenue"/>
+                        <ComboBoxItem Content="Bookings"/>
+                        <ComboBoxItem Content="Rooms"/>
+                        <ComboBoxItem Content="Customers"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Date Range -->
+                <StackPanel Grid.Column="1" 
                           Margin="0,0,20,0">
                     <Label Content="Start Date:" 
                          Style="{StaticResource ModernLabel}"
@@ -52,7 +66,7 @@
                               Margin="0,0,0,10"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" 
+                <StackPanel Grid.Column="2" 
                           Margin="0,0,20,0">
                     <Label Content="End Date:" 
                          Style="{StaticResource ModernLabel}"
@@ -63,7 +77,7 @@
                 </StackPanel>
 
                 <!-- Generate Button -->
-                <Button Grid.Column="2" 
+                <Button Grid.Column="3" 
                       Content="Generate Report" 
                       Style="{StaticResource ModernButton}"
                       Command="{Binding GenerateReportCommand}"
@@ -72,165 +86,191 @@
             </Grid>
         </Border>
 
-        <!-- Report Content -->
+        <!-- Quick Report Buttons -->
         <Border Grid.Row="2" 
                 Style="{StaticResource CardStyle}"
-                Visibility="{Binding HasReport, Converter={StaticResource BoolToVisibilityConverter}}">
-            <Grid Margin="20">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <!-- Report Header -->
-                <Border Grid.Row="0" 
-                      Background="{StaticResource PrimaryColor}"
-                      CornerRadius="4,4,0,0"
-                      Padding="15,10"
-                      Margin="0,0,0,20">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        
-                        <TextBlock Grid.Column="0" 
-                                 Text="Hotel Performance Report" 
-                                 FontWeight="Bold" 
-                                 Foreground="White"
-                                 FontSize="16"/>
-                        <TextBlock Grid.Column="1" 
-                                 Text="{Binding ReportPeriod}" 
-                                 FontWeight="Bold" 
-                                 Foreground="White"/>
-                    </Grid>
-                </Border>
-
-                <!-- Statistics Cards -->
-                <WrapPanel Grid.Row="1" Margin="0,0,0,20">
-                    <Border Style="{StaticResource CardStyle}" 
-                          Width="200" 
-                          Height="120" 
-                          Margin="0,0,20,0">
-                        <StackPanel Margin="20">
-                            <TextBlock Text="Total Bookings" 
-                                     FontSize="14" 
-                                     Foreground="{StaticResource DarkGrayColor}"
-                                     Margin="0,0,0,10"/>
-                            <TextBlock Text="{Binding TotalBookings}" 
-                                     FontSize="32" 
-                                     FontWeight="Bold" 
-                                     Foreground="{StaticResource PrimaryColor}"/>
-                        </StackPanel>
-                    </Border>
-
-                    <Border Style="{StaticResource CardStyle}" 
-                          Width="200" 
-                          Height="120" 
-                          Margin="0,0,20,0">
-                        <StackPanel Margin="20">
-                            <TextBlock Text="Total Revenue" 
-                                     FontSize="14" 
-                                     Foreground="{StaticResource DarkGrayColor}"
-                                     Margin="0,0,0,10"/>
-                            <TextBlock Text="{Binding TotalRevenue, StringFormat='{}{0:C}'}" 
-                                     FontSize="32" 
-                                     FontWeight="Bold" 
-                                     Foreground="{StaticResource SuccessColor}"/>
-                        </StackPanel>
-                    </Border>
-
-                    <Border Style="{StaticResource CardStyle}" 
-                          Width="200" 
-                          Height="120" 
-                          Margin="0,0,20,0">
-                        <StackPanel Margin="20">
-                            <TextBlock Text="Average Stay" 
-                                     FontSize="14" 
-                                     Foreground="{StaticResource DarkGrayColor}"
-                                     Margin="0,0,0,10"/>
-                            <TextBlock Text="{Binding AverageStay, StringFormat='{}{0:F1} days'}" 
-                                     FontSize="32" 
-                                     FontWeight="Bold" 
-                                     Foreground="{StaticResource WarningColor}"/>
-                        </StackPanel>
-                    </Border>
-
-                    <Border Style="{StaticResource CardStyle}" 
-                          Width="200" 
-                          Height="120" 
-                          Margin="0,0,20,0">
-                        <StackPanel Margin="20">
-                            <TextBlock Text="Occupancy Rate" 
-                                     FontSize="14" 
-                                     Foreground="{StaticResource DarkGrayColor}"
-                                     Margin="0,0,0,10"/>
-                            <TextBlock Text="{Binding OccupancyRate, StringFormat='{}{0:F1}%'}" 
-                                     FontSize="32" 
-                                     FontWeight="Bold" 
-                                     Foreground="{StaticResource InfoColor}"/>
-                        </StackPanel>
-                    </Border>
+                Margin="0,0,0,20">
+            <StackPanel Margin="20">
+                <Label Content="Quick Reports:" 
+                     Style="{StaticResource ModernLabel}"
+                     FontWeight="SemiBold"
+                     Margin="0,0,0,10"/>
+                <WrapPanel>
+                    <Button Content="Revenue Report" 
+                          Style="{StaticResource SecondaryButton}"
+                          Command="{Binding RevenueReportCommand}"
+                          Margin="0,0,10,0"/>
+                    <Button Content="Booking Report" 
+                          Style="{StaticResource SecondaryButton}"
+                          Command="{Binding BookingReportCommand}"
+                          Margin="0,0,10,0"/>
+                    <Button Content="Room Report" 
+                          Style="{StaticResource SecondaryButton}"
+                          Command="{Binding RoomReportCommand}"
+                          Margin="0,0,10,0"/>
+                    <Button Content="Customer Report" 
+                          Style="{StaticResource SecondaryButton}"
+                          Command="{Binding CustomerReportCommand}"
+                          Margin="0,0,10,0"/>
+                    <Button Content="Export Report" 
+                          Style="{StaticResource SuccessButton}"
+                          Command="{Binding ExportCommand}"
+                          Margin="0,0,10,0"/>
                 </WrapPanel>
-
-                <!-- Detailed Report -->
-                <Border Grid.Row="1" 
-                      Style="{StaticResource CardStyle}"
-                      Margin="0,20,0,0">
-                    <Grid Margin="20">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Section Header -->
-                        <TextBlock Grid.Row="0" 
-                                 Text="Booking Details" 
-                                 FontSize="18" 
-                                 FontWeight="Bold" 
-                                 Foreground="{StaticResource PrimaryColor}"
-                                 Margin="0,0,0,15"/>
-
-                        <!-- Booking DataGrid -->
-                        <DataGrid Grid.Row="1" 
-                                ItemsSource="{Binding BookingDetails}"
-                                Style="{StaticResource ModernDataGrid}"
-                                AutoGenerateColumns="False"
-                                IsReadOnly="True"
-                                MaxHeight="300">
-                            <DataGrid.ColumnHeaderStyle>
-                                <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource ModernDataGridColumnHeader}"/>
-                            </DataGrid.ColumnHeaderStyle>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=\{0:dd/MM/yyyy\}}" Width="100"/>
-                                <DataGridTextColumn Header="Bookings" Binding="{Binding Bookings}" Width="100"/>
-                                <DataGridTextColumn Header="Revenue" Binding="{Binding Revenue, StringFormat=\{0:C\}}" Width="120"/>
-                                <DataGridTextColumn Header="Average Price" Binding="{Binding AveragePrice, StringFormat=\{0:C\}}" Width="120"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
-                </Border>
-            </Grid>
-        </Border>
-
-        <!-- No Report Message -->
-        <Border Grid.Row="2" 
-                Style="{StaticResource CardStyle}"
-                Visibility="{Binding NoReport, Converter={StaticResource BoolToVisibilityConverter}}">
-            <StackPanel Margin="20" 
-                      HorizontalAlignment="Center" 
-                      VerticalAlignment="Center">
-                <TextBlock Text="Select a date range and generate a report" 
-                         FontSize="16" 
-                         Foreground="{StaticResource DarkGrayColor}"
-                         HorizontalAlignment="Center"
-                         Margin="0,0,0,10"/>
-                <TextBlock Text="Choose your desired period to view hotel performance metrics" 
-                         FontSize="14" 
-                         Foreground="{StaticResource DarkGrayColor}"
-                         HorizontalAlignment="Center"
-                         TextWrapping="Wrap"/>
             </StackPanel>
         </Border>
+
+        <!-- Report Content -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Statistics Cards -->
+            <Border Grid.Column="0" 
+                  Style="{StaticResource CardStyle}"
+                  Margin="0,0,10,0">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" 
+                             Text="Key Metrics" 
+                             FontSize="18" 
+                             FontWeight="Bold" 
+                             Foreground="{StaticResource PrimaryColor}"
+                             Margin="0,0,0,15"/>
+
+                    <WrapPanel Grid.Row="1">
+                        <Border Style="{StaticResource CardStyle}" 
+                              Width="180" 
+                              Height="100" 
+                              Margin="0,0,15,15">
+                            <StackPanel Margin="15">
+                                <TextBlock Text="Total Revenue" 
+                                         FontSize="12" 
+                                         Foreground="{StaticResource DarkGrayColor}"
+                                         Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding TotalRevenue, StringFormat='{}{0:C}'}" 
+                                         FontSize="24" 
+                                         FontWeight="Bold" 
+                                         Foreground="{StaticResource SuccessColor}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource CardStyle}" 
+                              Width="180" 
+                              Height="100" 
+                              Margin="0,0,15,15">
+                            <StackPanel Margin="15">
+                                <TextBlock Text="Total Bookings" 
+                                         FontSize="12" 
+                                         Foreground="{StaticResource DarkGrayColor}"
+                                         Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding TotalBookings}" 
+                                         FontSize="24" 
+                                         FontWeight="Bold" 
+                                         Foreground="{StaticResource PrimaryColor}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource CardStyle}" 
+                              Width="180" 
+                              Height="100" 
+                              Margin="0,0,15,15">
+                            <StackPanel Margin="15">
+                                <TextBlock Text="Active Bookings" 
+                                         FontSize="12" 
+                                         Foreground="{StaticResource DarkGrayColor}"
+                                         Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding ActiveBookings}" 
+                                         FontSize="24" 
+                                         FontWeight="Bold" 
+                                         Foreground="{StaticResource InfoColor}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource CardStyle}" 
+                              Width="180" 
+                              Height="100" 
+                              Margin="0,0,15,15">
+                            <StackPanel Margin="15">
+                                <TextBlock Text="Completed" 
+                                         FontSize="12" 
+                                         Foreground="{StaticResource DarkGrayColor}"
+                                         Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding CompletedBookings}" 
+                                         FontSize="24" 
+                                         FontWeight="Bold" 
+                                         Foreground="{StaticResource SuccessColor}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource CardStyle}" 
+                              Width="180" 
+                              Height="100" 
+                              Margin="0,0,15,15">
+                            <StackPanel Margin="15">
+                                <TextBlock Text="Online Bookings" 
+                                         FontSize="12" 
+                                         Foreground="{StaticResource DarkGrayColor}"
+                                         Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding OnlineBookings}" 
+                                         FontSize="24" 
+                                         FontWeight="Bold" 
+                                         Foreground="{StaticResource WarningColor}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource CardStyle}" 
+                              Width="180" 
+                              Height="100" 
+                              Margin="0,0,15,15">
+                            <StackPanel Margin="15">
+                                <TextBlock Text="Offline Bookings" 
+                                         FontSize="12" 
+                                         Foreground="{StaticResource DarkGrayColor}"
+                                         Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding OfflineBookings}" 
+                                         FontSize="24" 
+                                         FontWeight="Bold" 
+                                         Foreground="{StaticResource AccentColor}"/>
+                            </StackPanel>
+                        </Border>
+                    </WrapPanel>
+                </Grid>
+            </Border>
+
+            <!-- Report Content -->
+            <Border Grid.Column="1" 
+                  Style="{StaticResource CardStyle}"
+                  Margin="10,0,0,0">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" 
+                             Text="Report Details" 
+                             FontSize="18" 
+                             FontWeight="Bold" 
+                             Foreground="{StaticResource PrimaryColor}"
+                             Margin="0,0,0,15"/>
+
+                    <ScrollViewer Grid.Row="1" 
+                                VerticalScrollBarVisibility="Auto">
+                        <TextBlock Text="{Binding ReportContent}" 
+                                 FontFamily="Consolas"
+                                 FontSize="11"
+                                 TextWrapping="Wrap"
+                                 Foreground="{StaticResource DarkGrayColor}"/>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl> 

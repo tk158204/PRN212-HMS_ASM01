@@ -12,6 +12,8 @@ namespace TranTuanKietWPF.ViewModels
         private bool _isRoomManagementSelected = false;
         private bool _isBookingManagementSelected = false;
         private bool _isReportSelected = false;
+        private UserControl _currentViewContent;
+        private string _currentView = "Customers";
         
         public bool IsCustomerManagementSelected
         {
@@ -80,13 +82,58 @@ namespace TranTuanKietWPF.ViewModels
                 }
             }
         }
+
+        public UserControl CurrentViewContent
+        {
+            get => _currentViewContent;
+            set => SetProperty(ref _currentViewContent, value);
+        }
+
+        public string CurrentView
+        {
+            get => _currentView;
+            set => SetProperty(ref _currentView, value);
+        }
         
+        public ICommand NavigateCommand { get; }
         public ICommand LogoutCommand { get; }
         
         public AdminDashboardViewModel()
         {
             // Initialize commands
+            NavigateCommand = new RelayCommand(parameter => Navigate(parameter));
             LogoutCommand = new RelayCommand(_ => Logout());
+            
+            // Set default view
+            Navigate("Customers");
+        }
+
+        private void Navigate(object? parameter)
+        {
+            if (parameter is string viewName)
+            {
+                CurrentView = viewName;
+                
+                switch (viewName)
+                {
+                    case "Customers":
+                        IsCustomerManagementSelected = true;
+                        CurrentViewContent = new Views.CustomerManagementView();
+                        break;
+                    case "Rooms":
+                        IsRoomManagementSelected = true;
+                        CurrentViewContent = new Views.RoomManagementView();
+                        break;
+                    case "Bookings":
+                        IsBookingManagementSelected = true;
+                        CurrentViewContent = new Views.BookingManagementView();
+                        break;
+                    case "Reports":
+                        IsReportSelected = true;
+                        CurrentViewContent = new Views.ReportView();
+                        break;
+                }
+            }
         }
         
         private void Logout()

@@ -4,10 +4,6 @@
              xmlns:viewmodels="clr-namespace:TranTuanKietWPF.ViewModels"
              xmlns:converters="clr-namespace:TranTuanKietWPF.Converters">
     
-    <UserControl.DataContext>
-        <viewmodels:BookingViewModel />
-    </UserControl.DataContext>
-    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -65,7 +61,7 @@
                           Margin="20,0,0,0">
                     <Button Content="Add Booking" 
                           Style="{StaticResource SuccessButton}"
-                          Command="{Binding AddBookingCommand}"
+                          Command="{Binding AddCommand}"
                           Margin="0,0,10,0"/>
                     <Button Content="Refresh" 
                           Style="{StaticResource SecondaryButton}"
@@ -79,7 +75,7 @@
                           Margin="20,0,0,0">
                     <Ellipse Style="{StaticResource StatusIndicator}" 
                            Margin="0,0,8,0"/>
-                    <TextBlock Text="{Binding StatusMessage}" 
+                    <TextBlock Text="{Binding ErrorMessage}" 
                              FontFamily="{StaticResource PrimaryFont}"
                              FontSize="12"
                              Foreground="{StaticResource DarkGrayColor}"
@@ -95,7 +91,6 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <!-- Table Header -->
@@ -169,13 +164,13 @@
                                               Background="{StaticResource InfoColor}"
                                               Padding="8,4"
                                               Margin="0,0,5,0"
-                                              Command="{Binding DataContext.EditBookingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                               CommandParameter="{Binding}"/>
                                         <Button Content="Delete" 
                                               Style="{StaticResource ModernButton}"
                                               Background="{StaticResource AccentColor}"
                                               Padding="8,4"
-                                              Command="{Binding DataContext.DeleteBookingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                               CommandParameter="{Binding}"/>
                                     </StackPanel>
                                 </DataTemplate>
@@ -183,25 +178,6 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-
-                <!-- Pagination -->
-                <StackPanel Grid.Row="2" 
-                          Orientation="Horizontal" 
-                          HorizontalAlignment="Center" 
-                          Margin="0,20,0,0">
-                    <Button Content="Previous" 
-                          Style="{StaticResource ModernButton}"
-                          Command="{Binding PreviousPageCommand}"
-                          Margin="0,0,10,0"/>
-                    <TextBlock Text="{Binding CurrentPage}" 
-                             VerticalAlignment="Center" 
-                             Margin="10,0"
-                             FontWeight="Bold"/>
-                    <Button Content="Next" 
-                          Style="{StaticResource ModernButton}"
-                          Command="{Binding NextPageCommand}"
-                          Margin="10,0,0,0"/>
-                </StackPanel>
             </Grid>
         </Border>
     </Grid>

@@ -7,6 +7,7 @@ namespace TranTuanKietWPF.Views
         public ReportView()
         {
             InitializeComponent();
+            DataContext = new ViewModels.ReportViewModel();
         }
     }
 } 

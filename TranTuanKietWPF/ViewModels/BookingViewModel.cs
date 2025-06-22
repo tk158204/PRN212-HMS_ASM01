@@ -161,6 +161,7 @@ namespace TranTuanKietWPF.ViewModels
         }
 
         public ICommand AddCommand { get; }
+        public ICommand EditCommand { get; }
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand CancelCommand { get; }
@@ -191,6 +192,7 @@ namespace TranTuanKietWPF.ViewModels
             _roomTypes = new ObservableCollection<RoomType>();
 
             AddCommand = new RelayCommand(_ => ExecuteAdd());
+            EditCommand = new RelayCommand(_ => ExecuteEdit(), _ => SelectedBooking != null);
             SaveCommand = new RelayCommand(_ => ExecuteSave());
             DeleteCommand = new RelayCommand(_ => ExecuteDelete(), _ => SelectedBooking != null);
             CancelCommand = new RelayCommand(_ => ExecuteCancel());
@@ -305,7 +307,7 @@ namespace TranTuanKietWPF.ViewModels
                 // Create a new booking object
                 var newBooking = new BookingReservation
                 {
-                    BookingDate = DateTime.Now,
+                    BookingDate = DateTime.Today,
                     StartDate = DateTime.Today.AddDays(1),
                     EndDate = DateTime.Today.AddDays(2),
                     BookingDuration = 1,
@@ -314,11 +316,22 @@ namespace TranTuanKietWPF.ViewModels
                     BookingType = 1 // Online
                 };
 
-                // Show dialog for booking details
-                MessageBox.Show("Please select customer and room for the new booking.", "Add Booking", MessageBoxButton.OK, MessageBoxImage.Information);
+                // Show booking dialog
+                var dialog = new BookingDialog(newBooking, false);
                 
-                // For now, just refresh the list
-                LoadData();
+                if (dialog.ShowDialog() == true)
+                {
+                    // Get the booking from dialog
+                    var booking = dialog.ViewModel.Booking;
+                    
+                    // Add to database
+                    _bookingService.Add(booking);
+                    
+                    // Refresh list
+                    LoadData();
+                    
+                    MessageBox.Show("Booking added successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
             catch (Exception ex)
             {
@@ -354,8 +367,8 @@ namespace TranTuanKietWPF.ViewModels
                 // Calculate duration and price
                 CalculatePrice();
 
-                // Set booking date to today
-                NewBooking.BookingDate = DateTime.Now;
+                // Set booking date to today BEFORE calling service
+                NewBooking.BookingDate = DateTime.Today;
 
                 // Save booking
                 if (IsEditing)
@@ -427,7 +440,7 @@ namespace TranTuanKietWPF.ViewModels
         {
             NewBooking = new BookingReservation
             {
-                BookingDate = DateTime.Now,
+                BookingDate = DateTime.Today,
                 StartDate = DateTime.Today,
                 EndDate = DateTime.Today.AddDays(1),
                 BookingStatus = 1,
@@ -514,6 +527,50 @@ namespace TranTuanKietWPF.ViewModels
                     booking.Room = _roomService.GetRoomByID(booking.RoomID);
                 }
                 Bookings = new ObservableCollection<BookingReservation>(bookings);
+            }
+        }
+
+        private void ExecuteEdit()
+        {
+            if (SelectedBooking == null) return;
+
+            try
+            {
+                // Create a copy for editing
+                var bookingToEdit = new BookingReservation
+                {
+                    BookingReservationID = SelectedBooking.BookingReservationID,
+                    CustomerID = SelectedBooking.CustomerID,
+                    RoomID = SelectedBooking.RoomID,
+                    BookingDate = SelectedBooking.BookingDate,
+                    StartDate = SelectedBooking.StartDate,
+                    EndDate = SelectedBooking.EndDate,
+                    BookingDuration = SelectedBooking.BookingDuration,
+                    TotalPrice = SelectedBooking.TotalPrice,
+                    BookingStatus = SelectedBooking.BookingStatus,
+                    BookingType = SelectedBooking.BookingType
+                };
+
+                // Show booking dialog
+                var dialog = new BookingDialog(bookingToEdit, true);
+                
+                if (dialog.ShowDialog() == true)
+                {
+                    // Get the booking from dialog
+                    var booking = dialog.ViewModel.Booking;
+                    
+                    // Update in database
+                    _bookingService.Update(booking);
+                    
+                    // Refresh list
+                    LoadData();
+                    
+                    MessageBox.Show("Booking updated successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Error: {ex.Message}";
             }
         }
     }

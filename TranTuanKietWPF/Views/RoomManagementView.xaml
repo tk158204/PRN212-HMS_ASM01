@@ -3,10 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewmodels="clr-namespace:TranTuanKietWPF.ViewModels">
     
-    <UserControl.DataContext>
-        <viewmodels:RoomViewModel />
-    </UserControl.DataContext>
-    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -60,7 +56,7 @@
                 <Button Grid.Column="1" 
                       Content="Add Room" 
                       Style="{StaticResource SuccessButton}"
-                      Command="{Binding AddRoomCommand}"/>
+                      Command="{Binding AddCommand}"/>
             </Grid>
         </Border>
 
@@ -112,7 +108,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Room #" Binding="{Binding RoomNumber}" Width="80"/>
                         <DataGridTextColumn Header="Room Type" Binding="{Binding RoomType.RoomTypeName}" Width="*"/>
-                        <DataGridTextColumn Header="Price" Binding="{Binding RoomType.RoomTypePrice, StringFormat=\{0:C\}}" Width="120"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding RoomPricePerDate, StringFormat=\{0:C\}}" Width="120"/>
                         <DataGridTextColumn Header="Status" Binding="{Binding RoomStatus}" Width="100"/>
                         <DataGridTextColumn Header="Floor" Binding="{Binding RoomFloor}" Width="100"/>
                         <DataGridTemplateColumn Header="Actions" Width="100">
@@ -124,13 +120,13 @@
                                               Background="{StaticResource InfoColor}"
                                               Padding="8,4"
                                               Margin="0,0,5,0"
-                                              Command="{Binding DataContext.EditRoomCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                               CommandParameter="{Binding}"/>
                                         <Button Content="Delete" 
                                               Style="{StaticResource ModernButton}"
                                               Background="{StaticResource AccentColor}"
                                               Padding="8,4"
-                                              Command="{Binding DataContext.DeleteRoomCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                               CommandParameter="{Binding}"/>
                                     </StackPanel>
                                 </DataTemplate>

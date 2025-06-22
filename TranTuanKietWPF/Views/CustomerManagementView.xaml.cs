@@ -7,6 +7,7 @@ namespace TranTuanKietWPF.Views
         public CustomerManagementView()
         {
             InitializeComponent();
+            DataContext = new ViewModels.CustomerViewModel();
         }
     }
 } 

@@ -234,11 +234,6 @@ namespace Services
                 throw new ValidationException("Start date cannot be in the past");
             }
 
-            if (booking.BookingDate > DateTime.Today)
-            {
-                throw new ValidationException("Booking date cannot be in the future");
-            }
-
             if (booking.BookingDuration <= 0 || booking.BookingDuration > 365)
             {
                 throw new ValidationException("Booking duration must be between 1 and 365 days");

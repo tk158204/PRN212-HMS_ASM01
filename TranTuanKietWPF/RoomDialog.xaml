@@ -10,12 +10,52 @@
             <Setter Property="Margin" Value="0,5,0,10"/>
             <Setter Property="Padding" Value="5,3"/>
             <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#ddd"/>
+        </Style>
+        
+        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Margin" Value="0,5,0,10"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#ddd"/>
         </Style>
         
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Margin" Value="5,0"/>
             <Setter Property="Padding" Value="15,5"/>
             <Setter Property="MinWidth" Value="80"/>
+            <Setter Property="Background" Value="#3498db"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="3"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2980b9"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style x:Key="CancelButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+            <Setter Property="Background" Value="#95a5a6"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#7f8c8d"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
     
@@ -47,11 +87,11 @@
             <TextBlock Text="Room Type:" Margin="0,5,0,0"/>
             <ComboBox ItemsSource="{Binding RoomTypes}" DisplayMemberPath="RoomTypeName" 
                       SelectedValuePath="RoomTypeID" SelectedValue="{Binding Room.RoomTypeID}" 
-                      Margin="0,5,0,10" Height="30"/>
+                      Style="{StaticResource ComboBoxStyle}"/>
             
-            <TextBlock Text="Status:" Margin="0,5,0,0" Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            <TextBlock Text="Status:" Margin="0,5,0,0" Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
             <ComboBox SelectedIndex="{Binding Room.RoomStatus, Converter={StaticResource StatusToIndexConverter}}" 
-                      Margin="0,5,0,10" Height="30" Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibilityConverter}}">
+                      Style="{StaticResource ComboBoxStyle}" Visibility="{Binding IsEditMode, Converter={StaticResource BoolToVisibilityConverter}}">
                 <ComboBoxItem Content="Active"/>
                 <ComboBoxItem Content="Deleted"/>
             </ComboBox>
@@ -62,7 +102,7 @@
         <!-- Buttons -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
             <Button Content="Save" Command="{Binding SaveCommand}" Style="{StaticResource ButtonStyle}"/>
-            <Button Content="Cancel" Command="{Binding CancelCommand}" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}" Style="{StaticResource CancelButtonStyle}"/>
         </StackPanel>
     </Grid>
 </Window> 

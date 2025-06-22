@@ -7,6 +7,7 @@ namespace TranTuanKietWPF.Views
         public RoomManagementView()
         {
             InitializeComponent();
+            DataContext = new ViewModels.RoomViewModel();
         }
     }
 } 
